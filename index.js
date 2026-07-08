@@ -55,6 +55,19 @@ function typeName(t) {
   }
 }
 
+// Discord force-lowercases these channel types on creation, so plain ASCII
+// capitals can't survive. Voice/stage channels and categories keep their case.
+const LOWERCASED_TYPES = new Set(['text', 'announcement', 'forum']);
+
+// For the lowercased types only, convert ASCII capital letters (A–Z) into
+// fullwidth uppercase letters (Ａ–Ｚ). Those are different codepoints, so
+// Discord leaves them alone and they display as caps. Lowercase letters and
+// everything else are left untouched.
+function keepCaps(name, type) {
+  if (!name || !LOWERCASED_TYPES.has(type)) return name;
+  return name.replace(/[A-Z]/g, c => String.fromCharCode(0xFF21 + c.charCodeAt(0) - 65));
+}
+
 // ─────────────────────────────────────────────
 //  MODE 1 — DIRECT: read a real server's layout
 // ─────────────────────────────────────────────
@@ -180,7 +193,8 @@ async function buildStructure(guild, structure, progressCb) {
   };
 
   for (const ch of structure.uncategorized) {
-    await makeChannel({ name: ch.name?.slice(0, 100) || 'channel', type: TYPE_MAP[ch.type] ?? ChannelType.GuildText });
+    const name = keepCaps(ch.name?.slice(0, 100) || 'channel', ch.type);
+    await makeChannel({ name, type: TYPE_MAP[ch.type] ?? ChannelType.GuildText });
   }
 
   for (const cat of structure.categories) {
@@ -191,7 +205,7 @@ async function buildStructure(guild, structure, progressCb) {
       await sleep(400);
     } catch (e) { console.error(`[clone] Failed category "${cat.name}":`, e.message); failed++; }
     for (const ch of cat.channels) {
-      const opts = { name: ch.name?.slice(0, 100) || 'channel', type: TYPE_MAP[ch.type] ?? ChannelType.GuildText };
+      const opts = { name: keepCaps(ch.name?.slice(0, 100) || 'channel', ch.type), type: TYPE_MAP[ch.type] ?? ChannelType.GuildText };
       if (parent) opts.parent = parent.id;
       await makeChannel(opts);
     }
