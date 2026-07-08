@@ -127,7 +127,8 @@ Respond with ONLY raw JSON, no markdown fences, no explanation, in exactly this 
 }
 
 Valid "type" values: "text", "voice", "announcement", "stage", "forum".
-Preserve the top-to-bottom order shown. If multiple screenshots overlap, merge them without duplicates.`;
+
+ORDER MATTERS: list every category, and every channel inside each category, in the EXACT top-to-bottom order they appear in the screenshot. Do not sort, reorder, or group by type — keep the visual order exactly as shown. If multiple screenshots overlap, merge them in order without duplicates.`;
 
   parts.push({ text: prompt });
 
