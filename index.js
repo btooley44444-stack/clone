@@ -101,7 +101,20 @@ async function readStructureFromImages(attachments) {
   }
 
   const prompt = `These are screenshot(s) of a Discord server's channel sidebar.
-Extract the FULL channel structure you can see. Keep emojis and separators that are part of channel/category names.
+Extract the FULL channel structure you can see.
+
+TRANSCRIBE NAMES EXACTLY — this is critical:
+- Copy every character verbatim, including the "|" pipe/bar character, dashes, dots, brackets and any emojis. Do NOT drop, swap or normalize separators.
+- Preserve capitalization EXACTLY as shown. If a name is UPPERCASE, keep it UPPERCASE; if it is lowercase, keep it lowercase. Category names are usually UPPERCASE — copy them exactly, do not title-case or lowercase them.
+- Do not "clean up" or rephrase names. What you see is what you output.
+
+IDENTIFY CHANNEL TYPE BY ITS ICON (left of the name):
+- "text": a # (hashtag) icon.
+- "voice": a speaker icon.
+- "announcement": a # with a megaphone/loudspeaker.
+- "stage": a person/microphone-in-circle icon.
+- "forum": looks like a chat bubble / speech-bubble with lines, OR a numbered-list / posts icon. Discord forum channels do NOT use a # — if the icon is a bubble or list rather than a #, it is "forum", not "text". Only use "text" when you clearly see a # icon.
+Look carefully at the icon before choosing the type. Do not default a forum to text.
 
 Respond with ONLY raw JSON, no markdown fences, no explanation, in exactly this shape:
 {
@@ -112,7 +125,7 @@ Respond with ONLY raw JSON, no markdown fences, no explanation, in exactly this 
 }
 
 Valid "type" values: "text", "voice", "announcement", "stage", "forum".
-Use "text" if unsure. Preserve the top-to-bottom order shown. If multiple screenshots overlap, merge them without duplicates.`;
+Preserve the top-to-bottom order shown. If multiple screenshots overlap, merge them without duplicates.`;
 
   parts.push({ text: prompt });
 
