@@ -103,10 +103,12 @@ async function readStructureFromImages(attachments) {
   const prompt = `These are screenshot(s) of a Discord server's channel sidebar.
 Extract the FULL channel structure you can see.
 
-TRANSCRIBE NAMES EXACTLY — this is critical:
-- Copy every character verbatim, including the "|" pipe/bar character, dashes, dots, brackets and any emojis. Do NOT drop, swap or normalize separators.
-- Preserve capitalization EXACTLY as shown. If a name is UPPERCASE, keep it UPPERCASE; if it is lowercase, keep it lowercase. Category names are usually UPPERCASE — copy them exactly, do not title-case or lowercase them.
-- Do not "clean up" or rephrase names. What you see is what you output.
+TRANSCRIBE NAMES EXACTLY, CHARACTER-FOR-CHARACTER — this is critical:
+- Output the EXACT unicode codepoints you see. Do NOT convert special/fancy characters into their plain ASCII equivalents.
+- In particular, if you see a fullwidth vertical bar "｜" (U+FF5C), output "｜" — do NOT replace it with the ASCII "|". Likewise keep fullwidth letters, styled/stylized letters, CJK characters (e.g. 位 炎 影 級 痛 送 零 機), brackets and emojis exactly as shown.
+- Preserve spacing exactly. If letters are shown spaced out like "a n n o u n c e", keep those spaces.
+- Preserve capitalization exactly. Never title-case or lowercase a name.
+- Do NOT "clean up", simplify, or normalize names in any way. Copy the glyphs verbatim, as if transcribing symbols you don't understand.
 
 IDENTIFY CHANNEL TYPE BY ITS ICON (left of the name):
 - "text": a # (hashtag) icon.
