@@ -10,8 +10,8 @@
 //      the bot reads them with AI and rebuilds the structure.
 //
 //  .env keys:
-//    BOT_TOKEN=MTUyMDk0ODM4NzMwODg5NjI2Ng.G1svlc.PY2P6gGHXSW-YP6YIKQ2ZS3B3BZ6WWtPXK7ono            (required)
-//    GEMINI_API_KEY=AQ.Ab8RN6I7-t-CbMlLHwQ4pkqq4v5A2UNPhSTOlXlQsFeGL5Unyg    (only needed for
+//    BOT_TOKEN=your-discord-bot-token-here                (required)
+//    GEMINI_API_KEY=your-gemini-key-here    (only needed for
 //                                                 screenshot mode)
 //    Get a free Gemini key at https://aistudio.google.com/apikey
 // ═══════════════════════════════════════════════════════════════
@@ -116,7 +116,7 @@ Use "text" if unsure. Preserve the top-to-bottom order shown. If multiple screen
 
   parts.push({ text: prompt });
 
-  const model = 'gemini-2.0-flash';
+  const model = 'gemini-2.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
   const res = await fetch(url, {
     method: 'POST',
