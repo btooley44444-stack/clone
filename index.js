@@ -167,8 +167,13 @@ async function buildStructure(guild, structure, progressCb) {
   const total = structure.uncategorized.length + structure.categories.length +
     structure.categories.reduce((n, c) => n + c.channels.length, 0);
 
+  // A single running counter used as the explicit `position` for every
+  // channel/category we create, so Discord keeps them in screenshot order
+  // instead of re-sorting by creation time.
+  let pos = 0;
+
   const makeChannel = async (opts) => {
-    try { await guild.channels.create(opts); created++; }
+    try { await guild.channels.create({ ...opts, position: pos++ }); created++; }
     catch (e) { console.error(`[clone] Failed "${opts.name}":`, e.message); failed++; }
     if ((created + failed) % 5 === 0) await progressCb(created + failed, total);
     await sleep(400);
@@ -181,7 +186,7 @@ async function buildStructure(guild, structure, progressCb) {
   for (const cat of structure.categories) {
     let parent = null;
     try {
-      parent = await guild.channels.create({ name: cat.name?.slice(0, 100) || 'category', type: ChannelType.GuildCategory });
+      parent = await guild.channels.create({ name: cat.name?.slice(0, 100) || 'category', type: ChannelType.GuildCategory, position: pos++ });
       created++;
       await sleep(400);
     } catch (e) { console.error(`[clone] Failed category "${cat.name}":`, e.message); failed++; }
