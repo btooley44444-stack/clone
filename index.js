@@ -60,12 +60,13 @@ function typeName(t) {
 const LOWERCASED_TYPES = new Set(['text', 'announcement', 'forum']);
 
 // For the lowercased types only, convert ASCII capital letters (A–Z) into
-// fullwidth uppercase letters (Ａ–Ｚ). Those are different codepoints, so
-// Discord leaves them alone and they display as caps. Lowercase letters and
-// everything else are left untouched.
+// unicode MATHEMATICAL SANS-SERIF capitals (𝖠–𝖹). Those are different
+// codepoints, so Discord doesn't lowercase them, and they render as clean
+// normal-width capital letters — the same look the fsymbols generator gives.
+// Lowercase letters and everything else are left untouched.
 function keepCaps(name, type) {
   if (!name || !LOWERCASED_TYPES.has(type)) return name;
-  return name.replace(/[A-Z]/g, c => String.fromCharCode(0xFF21 + c.charCodeAt(0) - 65));
+  return name.replace(/[A-Z]/g, c => String.fromCodePoint(0x1D5A0 + c.charCodeAt(0) - 65));
 }
 
 // ─────────────────────────────────────────────
